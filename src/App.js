@@ -1,30 +1,37 @@
 import React, {Component} from 'react';
 import './App.css';
-import ValidationComponent from './ValidationComponent/ValidationComponent';
-import CharComponent from './CharComponent/CharComponent';
+import Validation from './Validation/Validation';
+import Char from './Char/Char';
 
 class App extends Component {
   state = {
     userInput: ''
   }
 
-  inputChangeHandler = (event) => {
+  inputChangedHandler = (event) => {
     this.setState({userInput: event.target.value})
   }
 
-  deleteCharHandler = ( charIndex )  => {
-    let chars = [...this.state.userInput.split('')];
-    chars.splice(charIndex, 1);
+  deleteCharHandler = ( index )  => {
+    const chars = [...this.state.userInput.split('')];
+    chars.splice(index, 1);
     this.setState({userInput: chars.join('')});
 }
 
   render() {
+    const charList = this.state.userInput.split('').map((char, index) => {
+      return <Char 
+        character={char} 
+        key={index}
+        clicked={() => this.deleteCharHandler(index)} />
+    });
+
     return (
       <div className="App">
-        <input type="text" onChange={this.inputChangeHandler} value={this.state.userInput} />
+        <input type="text" onChange={this.inputChangedHandler} value={this.state.userInput} />
         <p>Your text length: {this.state.userInput.length}</p>
-        <ValidationComponent textLength={this.state.userInput.length} />
-        <CharComponent text={this.state.userInput} deleteChar={this.deleteCharHandler} />
+        <Validation textLength={this.state.userInput.length} />
+        {charList}
       </div>
     )
   }
